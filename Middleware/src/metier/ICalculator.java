@@ -1,4 +1,4 @@
-package service;
+package metier;
 
 import java.math.BigDecimal;
 import java.rmi.Remote;
@@ -7,6 +7,6 @@ import java.util.AbstractMap.SimpleEntry;
 
 public interface ICalculator extends Remote
 {
-    public SimpleEntry<String, BigDecimal> computePi() throws RemoteException;
+    public SimpleEntry<String, BigDecimal> compute(int from, int to) throws RemoteException;
 
 }
