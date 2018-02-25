@@ -6,5 +6,7 @@ import java.rmi.RemoteException;
 
 public interface IMiddleware extends Remote
 {
-    public BigDecimal distribute(int n) throws RemoteException;
+    public BigDecimal distribute(int id, int n) throws RemoteException;
+
+    public WorkUnit getWork() throws RemoteException;
 }

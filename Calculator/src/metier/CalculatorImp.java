@@ -1,5 +1,6 @@
 package metier;
 
+import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.util.AbstractMap.SimpleEntry;
@@ -8,20 +9,28 @@ import service.ICalculator;
 
 public class CalculatorImp implements ICalculator
 {
-    String name;
+    private static int n = 0;
+    int idCalculator;
 
-    public CalculatorImp(String name)
+    public CalculatorImp()
     {
-        this.name = name;
+        this.idCalculator = n;
+        n++;
     }
 
     @Override
-    public SimpleEntry<String, BigDecimal> computePi() throws RemoteException
+    public int getID()
+    {
+        return this.idCalculator;
+    }
+
+    @Override
+    public SimpleEntry<Integer, BigDecimal> computePi(WorkUnit work) throws RemoteException
     {
         BigDecimal bi = new BigDecimal(0);
 
-        int from = 0;
-        int to = 0;
+        int from = work.getFrom();
+        int to = work.getTo();
 
         for (int i = from; i < to; i++)
         {
@@ -29,7 +38,12 @@ public class CalculatorImp implements ICalculator
                     * ((4 / (8 * i) + 1) - (2 / (8 * i) + 4) - (1 / (8 * i) + 5) - (1 / (8 * i) + 6))));
         }
 
-        // update
-        return new SimpleEntry<String, BigDecimal>(this.name, bi);
+        return new SimpleEntry<Integer, BigDecimal>(this.getID(), bi);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+
     }
 }

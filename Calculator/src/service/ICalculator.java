@@ -1,12 +1,16 @@
 package service;
 
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.AbstractMap.SimpleEntry;
 
-public interface ICalculator extends Remote
-{
-    public SimpleEntry<String, BigDecimal> computePi() throws RemoteException;
+import metier.WorkUnit;
 
+public interface ICalculator extends Remote, ActionListener
+{
+    public SimpleEntry<Integer, BigDecimal> computePi(WorkUnit work) throws RemoteException;
+
+    public int getID() throws RemoteException;
 }
