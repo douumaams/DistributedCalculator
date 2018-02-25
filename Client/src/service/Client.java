@@ -35,23 +35,22 @@ public class Client implements IClient
         try
         {
             IClient client = new Client();
+            Registry registry =  LocateRegistry.getRegistry("localhost", 1099);
+            
             System.out.println("Exporting the client " + client.getID());
             IClient stub = (IClient) UnicastRemoteObject.exportObject(client, 0);
-
-            Registry registry = LocateRegistry.createRegistry(1099);
-
             registry.rebind("client" + client.getID(), stub);
-
-            IMiddleware middleware = (IMiddleware) Naming.lookup("middleware");
+            IMiddlewareClient middleware = (IMiddlewareClient) registry.lookup("middlewareClient");
 
             Scanner sc = new Scanner(System.in);
             System.out.println("Choose how many decimals you want to calculate : ");
             int choice = sc.nextInt();
             middleware.distribute(client.getID(), choice);
-
+            System.out.println(middleware.test());
+            
         } catch (Exception e)
         {
-            System.out.println("Exception occured " + "while ditributing the Pi calculus: " + "\n" + e.getMessage());
+            System.err.println("Exception occured " + "while ditributing the Pi calculus: " + "\n" + e.getMessage());
         }
     }
 

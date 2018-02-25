@@ -7,5 +7,6 @@ import java.util.AbstractMap.SimpleEntry;
 
 public interface ICalculator extends Remote
 {
-    public SimpleEntry<String, BigDecimal> compute(WorkUnit work) throws RemoteException;
+    public SimpleEntry<String, BigDecimal> compute(int from, int to) throws RemoteException;
+
 }

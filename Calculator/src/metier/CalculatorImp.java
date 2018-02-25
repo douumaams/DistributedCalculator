@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.util.AbstractMap.SimpleEntry;
 
 import service.ICalculator;
+import service.WorkUnit;
 
 public class CalculatorImp implements ICalculator
 {

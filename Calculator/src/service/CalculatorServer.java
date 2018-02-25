@@ -8,7 +8,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.AbstractMap.SimpleEntry;
 
 import metier.CalculatorImp;
-import metier.WorkUnit;
 
 public class CalculatorServer
 {
@@ -24,7 +23,7 @@ public class CalculatorServer
 
             registry.rebind("calculator" + calculator.getID(), stub);
 
-            IMiddleware middleware = (IMiddleware) Naming.lookup("middleware");
+            IMiddlewareEsclave middleware = (IMiddlewareEsclave) Naming.lookup("middleware");
 
             /* Timer timer = new Timer(10000, calculator); */
 
