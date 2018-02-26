@@ -2,10 +2,10 @@ package metier;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
 import javax.swing.Timer;
@@ -35,24 +35,25 @@ public class MiddlewareClientimp implements IMiddlewareClient, ActionListener
 
 
 	@Override
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed(ActionEvent event)
 	{
 		ArrayList<OperationPI> tempList = middleWareEsclave.getOperationsFinished();
 		
 		if(tempList == null)
 			return;
-		
-		for (OperationPI operationPI : tempList)
+        try
 		{
-			 try
-			{
-				IClient client = (IClient) Naming.lookup("client" + operationPI.getIdOperation());
-				client.printResult(operationPI.getResult());
-			} catch (MalformedURLException | RemoteException | NotBoundException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			Registry registry =  LocateRegistry.getRegistry("localhost", 1099);
+			
+			for (OperationPI operationPI : tempList)
+			{		
+					IClient client = (IClient) registry.lookup("client" + operationPI.getIdOperation());
+					client.printResult(operationPI.toString());
 			}
+		} catch (RemoteException | NotBoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		tempList.clear();

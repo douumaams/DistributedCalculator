@@ -50,4 +50,5 @@ public class WorkUnit implements Serializable
 	{
 		return "serverName: "+ this.serverName + " calculated from: "+ this.from +" to: "+this.to+"\n";
 	}
+	
 }

@@ -1,13 +1,11 @@
 package service;
 
-import java.math.BigDecimal;
-import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.AbstractMap.SimpleEntry;
+import java.util.Scanner;
 
 import metier.CalculatorImp;
+import metier.IMiddlewareEsclave;
 
 public class CalculatorServer
 {
@@ -15,25 +13,20 @@ public class CalculatorServer
     {
         try
         {
-            ICalculator calculator = new CalculatorImp();
-            System.out.println("Exporting the calculator " + calculator.getID());
-            ICalculator stub = (ICalculator) UnicastRemoteObject.exportObject(calculator, 0);
-
-            Registry registry = LocateRegistry.createRegistry(1099);
-
-            registry.rebind("calculator" + calculator.getID(), stub);
-
-            IMiddlewareEsclave middleware = (IMiddlewareEsclave) Naming.lookup("middleware");
-
-            /* Timer timer = new Timer(10000, calculator); */
-
-            while (true) /* a remplacer par un action performed */
-            {
-                WorkUnit work = middleware.getWork();
-                SimpleEntry<Integer, BigDecimal> result = calculator.computePi(work);
-                middleware.update(result.getKey(), result.getValue());
-                Thread.sleep(10000);
-            }
+        	 Scanner sc = new Scanner(System.in);
+        	 System.out.println("Configuration of the calculator");
+        	 System.out.println("Enter the calculator name : ");
+             String name = sc.nextLine();
+            
+        	 
+            Registry registry = LocateRegistry.getRegistry(1099);
+            IMiddlewareEsclave middleware = (IMiddlewareEsclave) registry.lookup("middlewareEsclave");
+            CalculatorImp calculator = new CalculatorImp(name ,middleware, 1000);
+            calculator.start();
+            
+            System.out.println("Calculator "+ name +" is connecting...");
+            System.out.println("Connected");
+            while(true);
 
         } catch (Exception e)
         {

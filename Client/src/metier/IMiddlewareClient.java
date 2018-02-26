@@ -1,4 +1,4 @@
-package service;
+package metier;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -2,49 +2,95 @@ package metier;
 
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.AbstractMap.SimpleEntry;
 
-import service.ICalculator;
-import service.WorkUnit;
+import javax.swing.Timer;
 
 public class CalculatorImp implements ICalculator
 {
-    private static int n = 0;
-    int idCalculator;
+	private String name;
+	private Timer timer;
+	IMiddlewareEsclave middlewareEsclave;
 
-    public CalculatorImp()
-    {
-        this.idCalculator = n;
-        n++;
-    }
+	public CalculatorImp(String name, IMiddlewareEsclave middlewareEsclave, int delay)
+	{
+		this.name = name;
 
-    @Override
-    public int getID()
-    {
-        return this.idCalculator;
-    }
+		this.middlewareEsclave = middlewareEsclave;
+		timer = new Timer(delay, this);
+	}
 
-    @Override
-    public SimpleEntry<Integer, BigDecimal> computePi(WorkUnit work) throws RemoteException
-    {
-        BigDecimal bi = new BigDecimal(0);
 
-        int from = work.getFrom();
-        int to = work.getTo();
+	@Override
+	public SimpleEntry<Integer, BigDecimal> computePi(WorkUnit work) throws RemoteException
+	{
+		if (work == null)
+			return null;
+		int from = work.getFrom();
+		int to = work.getTo();
+		BigDecimal somme = BigDecimal.ZERO;
 
-        for (int i = from; i < to; i++)
-        {
-            bi.add(new BigDecimal(Math.pow((1 / 16), i)
-                    * ((4 / (8 * i) + 1) - (2 / (8 * i) + 4) - (1 / (8 * i) + 5) - (1 / (8 * i) + 6))));
-        }
+		for (int i = from; i < to; i++)
+		{
+			BigDecimal part1 = new BigDecimal(4.0 / (8 * i + 1));
+			BigDecimal part2 = new BigDecimal(2.0 / (8 * i + 4));
+			BigDecimal part3 = new BigDecimal(1.0 / (8 * i + 5));
+			BigDecimal part4 = new BigDecimal(1.0 / (8 * i + 6));
+			BigInteger part5 = BigInteger.valueOf(16).pow(i);
+			part1 = part1.subtract(part2);
+			part1 = part1.subtract(part3);
+			part1 = part1.subtract(part4);
+			part1 = part1.divide(new BigDecimal(part5));
+			somme = somme.add(part1);
+		}
+		
+//		BigDecimal nbd = new BigDecimal(10.0).pow(to);
+//		
+//		somme = somme.multiply(nbd);
+//		BigInteger tempSomme = somme.toBigInteger();
+		System.out.println("(Calculator "+ name + ") from:"+ from +"  to:"+ to + "result :"+ somme.toString());
+		
+		return new SimpleEntry<Integer, BigDecimal>(0, somme);
+//		return new SimpleEntry<Integer, BigDecimal>(this.getID(), new BigDecimal(tempSomme).divide(nbd));
 
-        return new SimpleEntry<Integer, BigDecimal>(this.getID(), bi);
-    }
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		WorkUnit work;
+		try
+		{
+			work = middlewareEsclave.getWork();
+			if (work == null)
+				return;
+			SimpleEntry<Integer, BigDecimal> result = this.computePi(work);
+			work.setServerName(name);
+			middlewareEsclave.update(work, work.getId(), result.getValue());
+		} catch (RemoteException e1)
+		{
+			e1.printStackTrace();
+		}
+		// try
+		// {
+		// System.out.println(middlewareEsclave.test2());
+		// } catch (RemoteException e1)
+		// {
+		// // TODO Auto-generated catch block
+		// e1.printStackTrace();
+		// }
+	}
 
-    }
+	public void start()
+	{
+		timer.start();
+	}
+
+	public void stop()
+	{
+		timer.stop();
+	}
+
 }

@@ -1,11 +1,12 @@
 package service;
 
-import java.math.BigDecimal;
-import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
+
+import metier.IClient;
+import metier.IMiddlewareClient;
 
 public class Client implements IClient
 {
@@ -19,9 +20,9 @@ public class Client implements IClient
     }
 
     @Override
-    public void printResult(BigDecimal bd)
+    public void printResult(String result)
     {
-        System.out.println(bd);
+        System.out.println(result);
     }
 
     @Override

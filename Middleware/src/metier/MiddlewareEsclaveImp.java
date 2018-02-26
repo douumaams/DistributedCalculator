@@ -10,16 +10,6 @@ public class MiddlewareEsclaveImp implements IMiddlewareEsclave
 	public MiddlewareEsclaveImp()
 	{
 		operations = new ArrayList<>();
-		
-		
-		
-		
-		
-    
-    	
-    	/**
-    	 * registry et company
-    	 */
 	}
 	
 	
@@ -42,13 +32,15 @@ public class MiddlewareEsclaveImp implements IMiddlewareEsclave
 
 
 	@Override
-	public synchronized void update(int id, BigDecimal res) throws RemoteException
+	public synchronized void update(WorkUnit work, int id, BigDecimal res) throws RemoteException
 	{
+		if(res == null)
+			return;
 		for (OperationPI operationPI : operations)
 		{
 			if(operationPI.getIdOperation() == id)
 			{
-				operationPI.update(res);
+				operationPI.update(work, res);
 				break;
 			}
 		}
@@ -62,12 +54,20 @@ public class MiddlewareEsclaveImp implements IMiddlewareEsclave
 		{
 			if(operationPI.finished())
 			{
+				operationPI.prepare();
 				returnValue.add(operationPI);
 			}
 		}
 		operations.removeAll(returnValue);
 		
 		return returnValue;
+	}
+
+
+	@Override
+	public String test2() throws RemoteException
+	{
+		return "ça marche";
 	}
 
 
