@@ -18,7 +18,7 @@ public class MiddlewareClientimp implements IMiddlewareClient, ActionListener
 	public MiddlewareClientimp(IMiddlewareEsclave middlewareEsclave)
 	{
 		this.middleWareEsclave = (MiddlewareEsclaveImp) middlewareEsclave;
-		this.timer = new Timer(1000, this);
+		this.timer = new Timer(10000, this);
     	timer.start();
 	}
 	
@@ -62,9 +62,9 @@ public class MiddlewareClientimp implements IMiddlewareClient, ActionListener
 
 
 	@Override
-	public String test() throws RemoteException
+	public String feedBack() throws RemoteException
 	{
-		return "C'est bon !";
+		return "Processing ...";
 	}
 
 }

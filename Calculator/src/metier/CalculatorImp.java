@@ -24,7 +24,7 @@ public class CalculatorImp implements ICalculator
 
 
 	@Override
-	public SimpleEntry<Integer, BigDecimal> computePi(WorkUnit work) throws RemoteException
+	public  BigDecimal computePi(WorkUnit work) throws RemoteException
 	{
 		if (work == null)
 			return null;
@@ -46,15 +46,7 @@ public class CalculatorImp implements ICalculator
 			somme = somme.add(part1);
 		}
 		
-//		BigDecimal nbd = new BigDecimal(10.0).pow(to);
-//		
-//		somme = somme.multiply(nbd);
-//		BigInteger tempSomme = somme.toBigInteger();
-		System.out.println("(Calculator "+ name + ") from:"+ from +"  to:"+ to + "result :"+ somme.toString());
-		
-		return new SimpleEntry<Integer, BigDecimal>(0, somme);
-//		return new SimpleEntry<Integer, BigDecimal>(this.getID(), new BigDecimal(tempSomme).divide(nbd));
-
+		return somme;
 	}
 
 	@Override
@@ -63,24 +55,13 @@ public class CalculatorImp implements ICalculator
 		WorkUnit work;
 		try
 		{
-			work = middlewareEsclave.getWork();
-			if (work == null)
-				return;
-			SimpleEntry<Integer, BigDecimal> result = this.computePi(work);
+			if ((work = middlewareEsclave.getWork()) == null) return;
 			work.setServerName(name);
-			middlewareEsclave.update(work, work.getId(), result.getValue());
+			middlewareEsclave.update(work, work.getId(), computePi(work));
 		} catch (RemoteException e1)
 		{
 			e1.printStackTrace();
 		}
-		// try
-		// {
-		// System.out.println(middlewareEsclave.test2());
-		// } catch (RemoteException e1)
-		// {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
 	}
 
 	public void start()

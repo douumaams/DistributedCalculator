@@ -4,9 +4,7 @@ import java.io.Serializable;
 
 public class WorkUnit implements Serializable
 {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private int from;
@@ -48,6 +46,6 @@ public class WorkUnit implements Serializable
 	@Override
 	public String toString()
 	{
-		return "serverName: "+ this.serverName + " calculated from: "+ this.from +" to: "+this.to+"\n";
+		return "Server: "+ this.serverName + " calculated from: "+ this.from +" to: "+this.to+"\n";
 	}
 }

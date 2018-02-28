@@ -2,7 +2,7 @@ package metier;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class OperationPI
 {
@@ -11,24 +11,30 @@ public class OperationPI
 	private int begin;
 	private int end;
 	private BigDecimal result;
-	private ArrayList<WorkUnit> workUnits;
+	private HashSet<WorkUnit> workUnits;
 	public OperationPI(int idOperation, int end)
 	{
 		this.idOperation = idOperation;
 		this.end = end;
 		this.begin = 0;
 		this.result = BigDecimal.ZERO;
-		this.workUnits = new ArrayList<>();
+		this.workUnits = new HashSet<>();
 	}
 	
 	public void update(WorkUnit work, BigDecimal bd)
 	{
+		if(work== null || bd == null)
+			return;
 		this.result = this.result.add(bd);
 		this.workUnits.add(work);
 	}
 	
 	public WorkUnit getWork()
 	{
+		if(finished())
+			return null;
+		System.out.println("(MiddleWare)from: "+begin+" to:"+ (begin + STEP));
+
 		if(begin < end && begin + STEP <= end)
 		{
 			begin = begin + STEP;
@@ -38,13 +44,12 @@ public class OperationPI
 			begin = end;
 			return new WorkUnit(idOperation ,tmp , end);
 		}
-		System.out.println("(MiddleWare)from: "+begin+" to:"+ (begin + STEP));
 		return new WorkUnit(idOperation ,begin - STEP, begin);
 	}
 	
 	public boolean finished()
 	{
-		return begin == end;
+		return begin == end ;
 	}
 	
 	public BigDecimal getResult()
@@ -71,7 +76,7 @@ public class OperationPI
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("[OperationPI:"+ this.idOperation +"] order: " + end+"\n");
-		sb.append("The servers contributed to the calculation are: \n");
+		sb.append("Servers contribution to the calculation: \n");
 		for (WorkUnit workUnit : workUnits)
 		{
 			sb.append(workUnit.toString());

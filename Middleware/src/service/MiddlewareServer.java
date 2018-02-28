@@ -16,6 +16,7 @@ public class MiddlewareServer
     {
     	try
 		{
+			System.out.println("MiddleWare Server");
     		System.out.println("Server started...");
 
 			IMiddlewareEsclave middlewareEsclave = new MiddlewareEsclaveImp();
@@ -28,7 +29,6 @@ public class MiddlewareServer
 			registry.rebind("middlewareEsclave", stubEsclave);
 			registry.rebind("middlewareClient", stubClient);
 
-			System.out.println("MiddleWare Server");
 		}catch(Exception e)
 		{
 			System.err.println("Erreur: " + e.getMessage());

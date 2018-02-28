@@ -8,6 +8,6 @@ import java.util.AbstractMap.SimpleEntry;
 
 public interface ICalculator extends  ActionListener
 {
-    public SimpleEntry<Integer, BigDecimal> computePi(WorkUnit work)throws RemoteException;
+    public BigDecimal computePi(WorkUnit work)throws RemoteException;
 
 }
